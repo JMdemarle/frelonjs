@@ -1,3 +1,4 @@
+import { date } from 'yup';
 import { get, options, put, post, del } from '../../services/fetch';
 
 export const getListTypePiege   = () => {
@@ -19,6 +20,10 @@ export const getListTypeInsecte   = () => {
 export const getListTypeAppat   = () => {
   return get('/ListTypeAppat');
 }
+
+export const deletePiege = async (id) => {
+  return del('/DetPiegeUtilise/' + id);
+};
 
 export const createPiege = async (Piege) => {
 
@@ -70,6 +75,11 @@ export const modifyPiege = async (Piege) => {
  */
 };
 
+
+export const getRelevesduPiege = (id) => {
+  return get('/listRelevesduPiege/' + id + '/releves/');
+  
+}
 export const getDerniersRelevesParPiege = () => {
   return get('/DerniersRelevesParPiege');
 };
@@ -77,4 +87,12 @@ export const getDerniersRelevesParPiege = () => {
 export const creeReleves = async (lesReleves) => {
 
   return post('/CreeReleves', { lesReleves });
+};
+
+export const updateReleve = (id, payload) => {
+  return put('/releves/' + id + '/', payload);
+};
+
+export const deleteReleve = (id,) => {
+  return del('/releves/' + id + '/');
 };

@@ -76,7 +76,7 @@ function HomeScreen() {
   }, []);
 
   const handleLoadingError = (res) => {
-    if (res.status === 401) {
+    if (res.status === 1401) {
       navigate('Login');
     } else {
       console.log("else");

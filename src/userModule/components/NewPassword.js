@@ -27,8 +27,8 @@ import { createAccount, login, retrieveApiculteurTotal, modApiculteur, confirmPa
 //import { setIdApiculteur } from '../../rucherModule/services/idApiculteur';
 import { useDispatch, useSelector } from 'react-redux'
 import { userStore } from '../../store/userslice'
-import { typfecondationStore } from '../../store/typfecondationslice'
-import { setAffReine, setAffNewPassword } from '../../store/displayslice'
+
+import {  setAffNewPassword } from '../../store/displayslice'
 
 //import UserForm from '../forms/UserForm';
 import CustomInput from '../../components/CustomInput';

@@ -8,6 +8,8 @@ const frelonSlice = createSlice({
     lesPiegesDePiegeur: null,
     lePiege: null,
     lesDerniersRelevesParPiege: null,
+    lesRelevesDuPiege: null,
+    leReleve: null,
 
   },
   reducers: {
@@ -23,13 +25,20 @@ const frelonSlice = createSlice({
     lesDerniersRelevesParPiegeStore: (state, action) => {
       state.lesDerniersRelevesParPiege = action.payload;
     },
+    lesRelevesDuPiegeStore: (state, action) => {
+      state.lesRelevesDuPiege = action.payload;
+    },
+    leReleveStore: (state, action) => {
+      state.leReleve = action.payload;
+    },
 
 
   }
 });
 export default frelonSlice.reducer;
 export const {
-  lesCampagnesStore, lesPiegesDePiegeurStore, lePiegeStore, lesDerniersRelevesParPiegeStore
+  lesCampagnesStore, lesPiegesDePiegeurStore, lePiegeStore, lesDerniersRelevesParPiegeStore,
+  lesRelevesDuPiegeStore, leReleveStore
 
 } = frelonSlice.actions;
 // Actions

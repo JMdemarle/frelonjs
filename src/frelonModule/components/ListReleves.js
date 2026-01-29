@@ -16,7 +16,6 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import EditIcon from '@mui/icons-material/Edit';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import ListAltIcon from '@mui/icons-material/ListAlt';
 
 
 import Tooltip from '@mui/material/Tooltip';
@@ -38,19 +37,15 @@ import CustomTitre from '../../components/CustomTitre';
 
 
 import {
-  lePiegeStore, lesRelevesDuPiegeStore
+  lePiegeStore, leReleveStore
 
 } from '../../store/frelonslice';
 
 import {
-  setAffCreePiege, setAffModPiege, setAffDelPiege, setAffListPieges,
-  setAffListReleves
+  setAffCreePiege, setAffModReleve, setAffDelPiege, setAffListPieges, setAffListReleves,
+  setAffDelReleve
 
 } from '../../store/frelondisplayslice';
-import { getRelevesduPiege } from '../services/accesFrelon';
-
-
-import { BluetoothAudio } from '@mui/icons-material';
 
 const style = {
   position: 'absolute',
@@ -64,10 +59,16 @@ const style = {
   p: 4,
 };
 
-function ListPieges() {
-  console.log('entree eaff');
-  const { lesPiegesDePiegeur } = useSelector(state => state.frelon);
-  console.log(lesPiegesDePiegeur);
+function ListReleves() {
+  console.log('entree List Releves');
+  const { lesRelevesDuPiege, lePiege } = useSelector(state => state.frelon);
+  console.log(lesRelevesDuPiege);
+  lesRelevesDuPiege.map((releve) => {
+    console.log(releve);
+    releve.comptages.map((comptage) => {
+      console.log(comptage);
+    })
+  })
   const { user } = useSelector(state => state.user);
   const navigate = useNavigate();
 
@@ -90,35 +91,17 @@ function ListPieges() {
   };
 
 
-  const handleEditClick = (piege) => {
+  const handleEditClick = (releve) => {
     console.log('handleEditClick');
-    console.log(piege);
-    dispatch(lePiegeStore(piege));
-    dispatch(setAffModPiege(true));
+    console.log(releve);
+    dispatch(leReleveStore(releve));
+    dispatch(setAffModReleve(true));
   };
 
 
   const handleDelClick = (piege) => {
-    dispatch(lePiegeStore(piege));
-    dispatch(setAffDelPiege(true));
-  };
-
-  const handleListClick = (piege) => {
-    console.log('handleListClick');
-    console.log(piege);
-    dispatch(lePiegeStore(piege));
-    dispatch(setAffListPieges(false));
-
-    Promise.all([getRelevesduPiege(piege.id)])
-      .then(async ([releves]) => {
-        console.log(releves);
-        dispatch(lesRelevesDuPiegeStore(releves));
-        dispatch(setAffListReleves(true));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    dispatch(leReleveStore(piege));
+    dispatch(setAffDelReleve(true));
   };
 
   return (
@@ -134,10 +117,12 @@ function ListPieges() {
         >
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <Box sx={{ flex: 9 }}>
-              <CustomTitre titre="Mes Pièges" />
+              <CustomTitre titre={"Les relevés de " + lePiege.nom} />
             </Box>
             <Box sx={{ flex: 1 }}>
-              <IconButton onClick={() => { dispatch(setAffListPieges(false)); navigate('/') }} >
+              <IconButton onClick={() => {
+                dispatch(setAffListReleves(false)); dispatch(setAffListPieges(true));
+              }} >
                 <CancelPresentationIcon sx={{ fontSize: 30, color: grey[900] }} />
               </IconButton>
             </Box>
@@ -145,20 +130,41 @@ function ListPieges() {
           <Typography variant="h4" component="div" align="center">
           </Typography>
           <Divider />
-          {lesPiegesDePiegeur.map((piege) => (
+          <CustomTextStd2 label='' contenu={lePiege.nomTypePiege} />
+          <CustomTextStd2 label='' contenu={lePiege.libCampagne} />
+          {lesRelevesDuPiege.map((releve) => (
 
-            <Box sx={{ m: 1 }} key={piege.id}>
+            <Box sx={{ m: 1 }} key={releve.id}>
               <Box style={{ flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'center' }}>
                 <Box style={{ flex: 11, flexDirection: 'column' }}>
 
                   <Card variant="outlined" sx={{ backgroundColor: amber[50], borderColor: amber[800], border: 1, borderRadius: '10px', }}
-                    onClick={() => { handleAffichePiege(piege) }}
+                    onClick={() => { handleAffichePiege(lePiege) }}
                   >
                     <CardActionArea >
                       <CardContent>
-                        <CustomTextStd2 label='' contenu={piege.nom} />
-                        <CustomTextStd2 label='' contenu={piege.nomTypePiege} />
-                        <CustomTextStd2 label='' contenu={piege.libCampagne} />
+                        <Box style={{ flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'left' }}>
+                          <Box style={{ flex: 1 }} >
+                            <CustomTextStd2 label='' contenu={releve.date} />
+                          </Box>
+                          <Box style={{ flex: 2 }} >
+                            <CustomTextStd2 label='' contenu={releve.nomAppat} />
+                          </Box>
+                          <Box style={{ flex: 2 }} >
+                            <CustomTextStd2 label='' contenu={releve.detailAppat} />
+                          </Box>
+                        </Box>
+                        <Box style={{ flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'left' }}>
+
+                          {releve.comptages.map((comptage, indexCapture) => (
+                            <Box key={indexCapture} style={{ flex: 1 }}>
+                              <CustomTextStd2
+                                label={comptage.nomTypeInsecte} contenu={comptage.nombre}
+                                labD={9} fieldD={3} />
+                            </Box>
+                          ))}
+                        </Box>
+
 
 
                       </CardContent>
@@ -168,26 +174,19 @@ function ListPieges() {
                 <Box style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly' }}>
                   <>
                     <Tooltip title={<Typography fontSize={20}>Modifier</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
-                      <IconButton onClick={() => { handleEditClick(piege) }} sx={{ color: green[700] }} >
+                      <IconButton onClick={() => { handleEditClick(releve) }} sx={{ color: green[700] }} >
                         <EditIcon sx={{ fontSize: 30 }} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={<Typography fontSize={20}>Supprimer</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
                       <span>
-                      <IconButton onClick={() => { handleDelClick(piege) }} sx={{ color: red[700] }} 
-                        disabled={piege.nbReleves > 0} >
-                        <DeleteIcon sx={{ fontSize: 30 }} />
-                      </IconButton>
+                        <IconButton onClick={() => { handleDelClick(releve) }} sx={{ color: red[700] }}
+                        >
+                          <DeleteIcon sx={{ fontSize: 30 }} />
+                        </IconButton>
                       </span>
                     </Tooltip>
-                    <Tooltip title={<Typography fontSize={20}>Supprimer</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
-                      <span>
-                      <IconButton onClick={() => { handleListClick(piege) }} sx={{ color: BluetoothAudio[700] }} 
-                        disabled={piege.nbReleves == 0} >
-                        <ListAltIcon sx={{ fontSize: 30 }} />
-                      </IconButton>
-                      </span>
-                    </Tooltip>
+
 
                   </>
                 </Box>
@@ -197,18 +196,10 @@ function ListPieges() {
           ))}
 
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Button variant="text" endIcon={<AddCircleOutlineIcon />} onClick={() => { nouveauPiege(); }}>
-            Nouveau Piege
-          </Button>
-
-        </Box>
-
-
       </Paper>
     </>
   )
 };
 // <Button type="submit" onClick={() => { dispatch(toggleAffReine()); dispatch(setAffReine(true)) }} >Modifier</Button>
 
-export default ListPieges;
+export default ListReleves;

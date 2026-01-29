@@ -18,26 +18,30 @@ import { userStore } from '../../store/userslice';
 
 import ListPieges from '../components/ListPieges';
 import ModPiege from '../components/ModPiege';
+import DelPiege from '../components/DelPiege';
+import ListReleves from '../components/ListReleves';
+import ModReleve from '../components/ModReleve';
+import DelReleve from '../components/DelReleve';
 
 
 
-import { cPickersStore } from '../../store/cPickersslice'
-//import { userStore} from '../../store/userslice'
-import { lesColoniesDeApiStore, lesColoniesDelegationStore, lesRuchersTravailStore } from '../../store/ruchersslice'
+
 //import { } from '../../store/displayRucherslice'
 import { setTitreBar, setAffLogin } from '../../store/displayslice'
 //import { setAffModColonie, setAffCreeColonie, setAffModRucher, setAffCreeRucher } from '../../store/displayRucherslice';
 
-import { lesTypesPiegesStore } from '../../store/frelontypeslice' ;
+import { lesTypesPiegesStore, lesTypesInsecteStore, lesTypesAppatStore } from '../../store/frelontypeslice' ;
 import { lesCampagnesStore, lesPiegesDePiegeurStore } from '../../store/frelonslice';
-import { setAffListPieges, setAffCreePiege, setAffModPiege, setAffDelPiege } from '../../store/frelondisplayslice';
+import { setAffListPieges, setAffCreePiege, setAffModPiege, setAffDelPiege, setAffListReleves } from '../../store/frelondisplayslice';
 import i18n from '../services/i18n';
 
 
 import {
   retrievePiegeurTotal
 } from '../../userModule/services/authentification';
-import { getListTypePiege, getListCampagne, getListPiegesDePiegeur } from '../services/accesFrelon';
+import { getListTypePiege, getListCampagne, getListPiegesDePiegeur, getListTypeInsecte,
+  getListTypeAppat
+ } from '../services/accesFrelon';
 import Typography from '@mui/material/Typography';
 import { List } from '@mui/material';
 
@@ -50,7 +54,10 @@ function PiegesScreen() {
 
   const { titreBar, affGenealogie, affLogin } = useSelector(state => state.display)
 
-  const { affListPieges, affCreePiege, affModPiege, affDelPiege } = useSelector(state => state.displayFrelon);
+  const { affListPieges, affCreePiege, affModPiege, affDelPiege, affListReleves, affModReleve,
+    affDelReleve
+
+   } = useSelector(state => state.displayFrelon);
 
   //const [affLogin, setAffLogin] = useState(false);
 
@@ -108,21 +115,21 @@ function PiegesScreen() {
       let mounted = true;
       let itemApi = user.id;
       setAllFetch(false);
-      Promise.all([getListTypePiege(),getListCampagne(), getListPiegesDePiegeur()])
-        .then(async ([itemsTypPiege, itemsCampagne, itemsPieges]) => { 
+      Promise.all([getListTypePiege(),getListCampagne(), getListPiegesDePiegeur(), getListTypeInsecte(),
+        getListTypeAppat()
+      ])
+        .then(async ([itemsTypPiege, itemsCampagne, itemsPieges, itemTypInsectes, itemTypeAppat]) => { 
           if (mounted) {
             dispatch(lesTypesPiegesStore(itemsTypPiege));
             dispatch(lesCampagnesStore(itemsCampagne));
             dispatch(lesPiegesDePiegeurStore(itemsPieges));
-            dispatch(setAffListPieges (true));
-            console.log('les pieges');
-            console.log(itemsPieges);
-            console.log('les types de pieges');
-            console.log(itemsTypPiege);
-            console.log('les campagnes');
-            console.log(itemsCampagne);
+            dispatch(lesTypesInsecteStore(itemTypInsectes));
+            dispatch(lesTypesAppatStore(itemTypeAppat));
             
+            dispatch(setAffListPieges (true));
+            dispatch(setAffListReleves (false));
 
+          
             setAllFetch(true);
           }
         
@@ -182,20 +189,22 @@ function PiegesScreen() {
   return (
     <>
       <MenuBar />
-      <Grid2 container>
 
 
-        <Grid2 size={8} >
           <Paper elevation={10} sx={{ bgcolor: amber[100] }}>
             {affListPieges && <ListPieges />}
             {affCreePiege && <ModPiege />}
             {affModPiege && <ModPiege />}
+            {affDelPiege && <DelPiege />}
+            {affListReleves && <ListReleves />}
+            {affModReleve && <ModReleve />}
+            {affDelReleve && <DelReleve />}
+
+            
 
 
           </Paper>
 
-        </Grid2>
-      </Grid2>
 
 
     </>

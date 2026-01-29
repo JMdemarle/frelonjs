@@ -27,20 +27,13 @@ import * as yup from 'yup';
 
 import { Button, Container, ButtonGroup, Dropdown } from "react-bootstrap";
 import { login, retrievePiegeurTotal, postPasswordReset } from '../services/authentification';
+import CreateAccount from './CreateAccount';
+
 
 import { useDispatch, useSelector } from 'react-redux'
 import { userStore } from '../../store/userslice'
-import { typfecondationStore } from '../../store/typfecondationslice'
 import { setAffLogin, setAffResetPassword } from '../../store/displayslice'
-import { setAffVisite} from '../../store/displayRucherslice'
-import {
-  laColonieStore, laDerniereVisiteStore, laVisiteStore, laColonieRevoke,
-  leDernierSoinStore, leSoinStore,
-  laDerniereRecolteStore, laRecolteStore,
-  laDerniereObservationStore, lObservationStore, 
-  lesColoniesDeApiStore, lesRuchersTravailStore, 
-  apiProprietaireStore, lesColoniesDelegationStore
-} from '../../store/ruchersslice'
+
 
 //import { setToken } from '../services/token';
 //import { setLangue, getLangue } from '../../rucherModule/services/getLangue';
@@ -73,7 +66,8 @@ const MonLogin = ({ affiche, ...props }) => {
   const { user } = useSelector(state => state.user)
   //const [visible, setVisible] = useState(true);
   const [errorMessage, setErrorMessage] = useState();
-  const { affLogin,  } = useSelector(state => state.display)
+  const { affLogin, } = useSelector(state => state.display);
+  const [affCreateAccount, setAffCreateAccount] = useState(false);
   console.log('mon login');
 
 
@@ -89,7 +83,7 @@ const MonLogin = ({ affiche, ...props }) => {
   const FormonSubmit = (data) => {
     localStorage.setItem('token', "");
     Promise.all([login(data.username, data.password)])
-      .then( ([res]) => {
+      .then(([res]) => {
         console.log('token reçu');
         console.log(res);
         localStorage.setItem('token', JSON.stringify(res));
@@ -143,15 +137,19 @@ const MonLogin = ({ affiche, ...props }) => {
     console.group('appel password reset');
     dispatch(setAffLogin(false));
     dispatch(setAffResetPassword(true));
- //   postPasswordReset('jm.demarle@outlook.fr')
+    //   postPasswordReset('jm.demarle@outlook.fr')
 
+  };
+
+  const locLogin = () => {
+    setAffCreateAccount(true)
   };
 
 
   return (
     <Modal
       open={affLogin}
-      onClose={() => {dispatch(setAffLogin(false))}}
+      onClose={() => { dispatch(setAffLogin(false)) }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -198,18 +196,27 @@ const MonLogin = ({ affiche, ...props }) => {
                     </Container>
 
                   </Form>
-                  <Link component="button" variant="body2" onClick={() => { passwordReset() }}> 
-                  <Typography variant='h6'>
-                  J'ai oublié mon mot de passe
-                  </Typography>
+                  <Box display="flex" justifyContent="flex-end" alignItems="flex-start" flexDirection={'column'}>
+                  <Link component="button" variant="body2" onClick={() => { passwordReset() }}>
+                    <Typography variant='h6'>
+                      J'ai oublié mon mot de passe
+                    </Typography>
+                  </Link>
+                  <Link component="button" variant="body2" onClick={() => { locLogin() }}>
+                    <Typography variant='h6'>
+                      Je crée mon compte
+                    </Typography>
                   </Link>
 
+                  </Box>
 
                 </div>
               </>
             )}
           </Formik>
         </Box>
+              <CreateAccount toggleAff={setAffCreateAccount} affiche={affCreateAccount} />
+
       </Paper>
     </Modal>
   );

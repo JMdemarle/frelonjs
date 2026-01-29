@@ -26,8 +26,7 @@ import { createAccount, login, retrievePiegeurTotal, modPiegeur } from '../servi
 //import { setToken } from '../services/token';
 import { useDispatch, useSelector } from 'react-redux'
 import { userStore } from '../../store/userslice'
-import { typfecondationStore } from '../../store/typfecondationslice'
-import { setAffReine } from '../../store/displayslice'
+
 
 //import UserForm from '../forms/UserForm';
 import CustomInput from '../../components/CustomInput';

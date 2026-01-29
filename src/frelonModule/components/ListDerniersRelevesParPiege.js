@@ -19,7 +19,7 @@ import dayjs from 'dayjs';
 
 
 
-import { dispDate6 } from '../services/prepDate';
+import { dispDate6 } from '../../services/prepDate';
 
 import InfoIcon from "@mui/icons-material/Info";
 import DeleteIcon from '@mui/icons-material/DeleteForeverOutlined';
@@ -98,9 +98,12 @@ function ListDerniersRelevesParPiege() {
 
 
   const { user } = useSelector(state => state.user);
-
-  const langue = user.langage;
-  let itemApi = user.id;
+  var langue = '';
+  if (user) {
+    langue = user.langage;
+  } else {
+    langue = 'fr';
+  };
 
 
   const dispatch = useDispatch()
@@ -111,7 +114,8 @@ function ListDerniersRelevesParPiege() {
     for (let piege of lesDerniersRelevesParPiege) {
       const locPiege = new Object();
       locPiege.piege_id = piege.id;
-      locPiege.datePrec = piege.dernier_releve?.date;
+      //locPiege.datePrec = piege.dernier_releve?.date;
+      piege.dernier_releve ? locPiege.datePrec = piege.dernier_releve.date : locPiege.datePrec = null;
       locPiege.type_piege = piege.type_piege;
       locPiege.latitude = piege.latitude;
       locPiege.longitude = piege.longitude;
@@ -129,24 +133,23 @@ function ListDerniersRelevesParPiege() {
         locCapture.typeInsecte = typeInsecte.id;
         locCapture.nom = typeInsecte.nom;
         if (index > -1) {
-          locCapture.nb = piege?.dernier_releve?.comptages[index].nombre;
+          locCapture.nb = '';
         } else {
           locCapture.nb = '';
         }
-        locCapture.nbPrec = locCapture.nb;
+        locCapture.nbPrec = piege?.dernier_releve?.comptages[index].nombre;
         lesCaptures.push(locCapture);
       };
       locPiege.lesCaptures = lesCaptures;
       lesPieges.push(locPiege);
-
     };
     init.lesPieges = lesPieges;
 
     init.dateS = dayjs();
-
     return init;
   };
 
+  /*
   const ValidationSchema = yup.object().shape({
     lesPieges: yup.array().of(
       yup.object({
@@ -165,6 +168,41 @@ function ListDerniersRelevesParPiege() {
       })
     )
 
+  }); */
+
+  const ValidationSchema = yup.object({
+    lesPieges: yup.array().of(
+      yup.object({
+        appat_id: yup.number().test(
+          "appât oblogatoire",
+          "Il faut choisir un appât",
+          function (value) {
+            const { lesCaptures } = this.parent;
+
+            // Vérifie si au moins un nombre est renseigné dans lesCaptures
+            const unNombreRenseigne = Array.isArray(lesCaptures) && lesCaptures.some(
+
+              (n) => n.nb !== null && n.nb !== undefined && n.nb !== ""
+
+            );
+
+            // Si aucun nombre n'est renseigné → OK, libelle facultatif
+            if (!unNombreRenseigne) return true;
+
+            // Sinon libelle obligatoire et > 0
+            return typeof value === "number" && value > 0;
+          }
+        ),
+
+        lesCaptures: yup.array().of(
+          yup.object({
+            nb: yup.number()
+              .integer("Entier requis")
+              .min(0, "≥ 0 requis")
+          })
+        ),
+      })
+    )
   });
 
 
@@ -180,16 +218,28 @@ function ListDerniersRelevesParPiege() {
       locReleve.date = laDate;
       locReleve.piege = piege.piege_id;
       locReleve.appat = piege.appat_id;
+      locReleve.latitude = piege.latitude;
+      locReleve.longitude = piege.longitude;
       piege.appat ? locReleve.detailAppat = piege.appat : locReleve.detailAppat = '';
       let lesCaptures = [];
+      let nbCaptures = 0;
       for (let capture of piege.lesCaptures) {
         const locCapture = new Object();
         locCapture.typeInsecte = capture.typeInsecte;
-        capture.nb ? locCapture.nombre = capture.nb : locCapture.nombre = 0;
+        if (capture.nb) {
+          nbCaptures = nbCaptures + capture.nb;
+          locCapture.nombre = capture.nb;
+        }
+        else {
+          locCapture.nombre = 0;
+        };
         lesCaptures.push(locCapture);
       };
-      locReleve.comptages = lesCaptures;
-      lesReleves.push(locReleve);
+      if (nbCaptures > 0) {
+        locReleve.comptages = lesCaptures;
+        lesReleves.push(locReleve);
+      };
+
     };
     console.log('lesReleves____');
     console.log(lesReleves);
@@ -227,6 +277,7 @@ function ListDerniersRelevesParPiege() {
           errors, touched, handleTextInput, withPickerValues, handleChange, handleBlur
         }) => (
           <>
+
             <Box style={{
               flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'center',
               justifyContent: 'space-evenly', backgroundColor: orange[200],
@@ -273,6 +324,11 @@ function ListDerniersRelevesParPiege() {
             <Box flex={1} // prend tout l'espace restant
               overflow="auto" // active le scroll si nécessaire
             >
+              {/* <pre> 
+                Values: {JSON.stringify(values, null, 2)}
+                Errors:  {JSON.stringify(errors, null, 2)}
+                Touched: {JSON.stringify(touched, null, 2)}
+              </pre> */}
               <Divider />
               {
                 values.lesPieges.map((piege, rowIndex) => (
@@ -351,16 +407,17 @@ function ListDerniersRelevesParPiege() {
 
                                 <Box style={{ flexDirection: 'column', flex: 1, display: 'flex', alignItems: 'left' }}>
 
-                                  {piege.lesCaptures.map((comptage, indexCapture) => (
-                                    <Box key={indexCapture} >
+                                  {piege.lesCaptures.sort((a, b) => a.typeInsecte - b.typeInsecte)
+                                                    .map((comptage, indexCapture) => (
+                                      <Box key={indexCapture} >
 
-                                      <Box style={{ flex: 1 }} >
-                                        <CustomTextStd2
-                                          style={{ flex: 1 }} label={comptage.nom} contenu={comptage.nbPrec}
-                                          labD={9} fieldD={3} />
+                                        <Box style={{ flex: 1 }} >
+                                          <CustomTextStd2
+                                            style={{ flex: 1 }} label={comptage.nom} contenu={comptage.nbPrec}
+                                            labD={9} fieldD={3} />
+                                        </Box>
                                       </Box>
-                                    </Box>
-                                  ))}
+                                    ))}
                                 </Box>
                               </Box>
                             </DialogContent>
@@ -394,7 +451,7 @@ function ListDerniersRelevesParPiege() {
                   </Box>
                 ))}
             </Box>
-            <Box display="flex" style={{ backgroundColor: orange[200] }} alignItems="center"   justifyContent="center">
+            <Box display="flex" style={{ backgroundColor: orange[200] }} alignItems="center" justifyContent="center">
               <IconButton onClick={handleSubmit} sx={{ color: green[700] }} >
                 <CheckCircleOutlineIcon sx={{ fontSize: 40 }} />
               </IconButton>

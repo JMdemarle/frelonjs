@@ -11,7 +11,10 @@ const displayFrelonSlice = createSlice({
     affCreePiege: false,
     affModPiege: false,
     affDelPiege: false,
+    affListReleves: false,
     affListDernierReleveParPiege: false,
+    affModReleve: false ,
+    affDelReleve: false
  
   },
   reducers: {
@@ -50,11 +53,33 @@ const displayFrelonSlice = createSlice({
         default: { state.affListDernierReleveParPiege = false; break; }
       }
     },
+    setAffListReleves: (state, action) => {
+      switch (action.payload) {
+        case false: { state.affListReleves = action.payload; break; }
+        case true: { state.affListReleves = action.payload; break; }
+        default: { state.affListReleves = false; break; }
+      }
+    },
+    setAffModReleve: (state, action) => {
+      switch (action.payload) {
+        case false: { state.affModReleve = action.payload; break; }
+        case true: { state.affModReleve = action.payload; break; }
+        default: { state.affModReleve = false; break; }
+      }
+    },
+    setAffDelReleve: (state, action) => {
+      switch (action.payload) {
+        case false: { state.affDelReleve = action.payload; break; }
+        case true: { state.affDelReleve = action.payload; break; }
+        default: { state.affDelReleve = false; break; }
+      }
+    },
   },
 });
 export default displayFrelonSlice.reducer;
 export const
-  { setAffListPieges, setAffCreePiege, setAffModPiege, setAffDelPiege, setAffListDernierReleveParPiege
+  { setAffListPieges, setAffCreePiege, setAffModPiege, setAffDelPiege, setAffListDernierReleveParPiege, setAffListReleves,
+    setAffModReleve, setAffDelReleve
   } = displayFrelonSlice.actions;
 // Actions
 //  const { loginSuccess, logoutSuccess } = slice.actions

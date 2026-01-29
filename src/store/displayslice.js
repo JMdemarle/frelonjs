@@ -6,15 +6,7 @@ const displaySlice = createSlice({
   name: 'display',
   initialState:
   {
-    affReine: 'NEAN',
-    affDisplayReine: false,
-    affTabListeReines: false,
-    affModReine: false,
-    affCreeReine: false,
-    affDelReine: false,    
-    modReine: true,
-    affGenealogie: 'NEAN',
-    affFilles: 'NEAN',
+
     affLogin :false ,
     affResetPassword: false,
     affModPassword: false,
@@ -51,92 +43,14 @@ const displaySlice = createSlice({
     }  },
 
 
-    setAffTabListeReines: (state, action) => {
-      switch (action.payload) {
-        case false: { state.affTabListeReines = action.payload; break; }
-        case true: { state.affTabListeReines = action.payload; break; }
-        default: { state.affTabListeReines = false; break; }
-      }
-    },
 
-    setAffDisplayReine: (state, action) => {
-      switch (action.payload) {
-        case false: { state.affDisplayReine = action.payload; break; }
-        case true: { state.affDisplayReine = action.payload; break; }
-        default: { state.affDisplayReine = false; break; }
-      }
-    },
-    setAffModReine: (state, action) => {
-      switch (action.payload) {
-        case false: { state.affModReine = action.payload; break; }
-        case true: { state.affModReine = action.payload; break; }
-        default: { state.affModReine = false; break; }
-      }
-    },
-    setAffCreeReine: (state, action) => {
-      switch (action.payload) {
-        case false: { state.affCreeReine = action.payload; break; }
-        case true: { state.affCreeReine = action.payload; break; }
-        default: { state.affCreeReine = false; break; }
-      }
-    },    
-    setAffDelReine: (state, action) => {
-      switch (action.payload) {
-        case false: { state.affDelReine = action.payload; break; }
-        case true: { state.affDelReine = action.payload; break; }
-        default: { state.affDelReine = false; break; }
-      }
-    },
 
-    setAffReine: (state, action) => {
-      switch (action.payload) {
-        case "AFFI": {
-          state.affReine = action.payload;
-          break;
-        }
-        case "MODI": {
-          state.affReine = action.payload;
-          break;
-        }
-        case "CREE": {
-          state.affReine = action.payload;
-          break;
-        }
-        default:
-          break;
-      }
 
-    },
-    setAffGenealogie: (state, action) => {
-      // 
-      switch (action.payload) {
-        case "OUI": { 
-          state.affGenealogie = action.payload;
-          break;
-        }
-        case "NON": {
-          state.affGenealogie = action.payload;
-          break;
-        }
-        default:
-          break;
-      }
-    },
-    setAffFilles: (state, action) => {
-      // 
-      switch (action.payload) {
-        case "OUI": {
-          state.affFilles = action.payload;
-          break;
-        }
-        case "NON": {
-          state.affFilles = action.payload;
-          break;
-        }
-        default:
-          break;
-      }
-    },
+
+    
+
+
+
     setTitreBar: (state, action) => {
       switch (action.payload) {
         case "CAPTURES": {
@@ -157,20 +71,14 @@ const displaySlice = createSlice({
       }
 
     },
-    togglemodReine: (state, action) => {
-      state.modReine = !state.modReine;
-    },
-    setmodReine: (state, action) => {
-      state.modReine = action.payload;
 
-    },
   },
 });
 export default displaySlice.reducer;
-export const { setAffLogin, setAffResetPassword, seAffModPassword, setAffNewPassword, 
-  toggleAffReine, setAffReine, setmodReine, togglemodReine, setAffGenealogie, setTitreBar,
-  setAffDisplayReine, setAffModReine, setAffDelReine, setAffCreeReine, setAffTabListeReines,
-  setAffFilles } = displaySlice.actions;
+export const { 
+  setAffLogin, setAffResetPassword, seAffModPassword, setAffNewPassword, setTitreBar,
+
+} = displaySlice.actions;
 // Actions
 //  const { loginSuccess, logoutSuccess } = slice.actions
 //  const { affReine, modReine } = useSelector(state => state.display)

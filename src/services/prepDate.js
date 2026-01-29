@@ -33,6 +33,11 @@ export const dispDate = (date, langue) => {
 export const dispDate6 = (date, langue) => {
         //  console.log(langue);  
         const Moment = require('moment');
+        console.log('dipsdate6');
+        console.log(date);
+        if (!date) {
+                return "";
+        };
         var dateR = new Date(date);
         //    console.log(dateR);
         switch (langue) {

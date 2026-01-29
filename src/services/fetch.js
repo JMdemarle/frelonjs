@@ -93,6 +93,8 @@ const getHeadersMultiPart = async () => {
 
 
 export const post = async (destination, body) => {
+  console.log('post ------------------------------------------');
+  console.log(API_URL + destination);
   const headers = await getHeaders();
 
   axios.defaults.withXSRFToken = true;
@@ -107,6 +109,8 @@ export const post = async (destination, body) => {
 
 
       });
+      console.log('retour post');
+      console.log(response);
     return response.data;
 
   }
@@ -115,15 +119,20 @@ export const post = async (destination, body) => {
     console.log(error);
     
     const result = error.response;
+    const err = new Error();
     if (result) {
     console.log(result);
  
     const texteErreur = result.statusText;
     console.log(error.response.request.responseText);
     console.log(result.request.responseText)
-    throw { message: texteErreur + ' ' + result.request.responseText, status: result.status  };}
+    err.message = texteErreur + ' ' + result.request.responseText;
+    err.status = result.status;
+    throw err;}
     else {
-      throw { message: error.message , status: 500 };
+      err.message = error.message
+      err.status = 500;
+      throw err;
     }
 /*
     const result = error.response;
@@ -165,12 +174,25 @@ export const get = async (destination, body) => {
   catch (error) {
     console.log('error axios -----------------------------');
     console.log(error);
+        const result = error.response;
+
+        if (result) {
+    console.log(result);
+ 
+    const texteErreur = result.statusText;
+    console.log(error.response.request.responseText);
+    console.log(result.request.responseText)
+    throw { message: texteErreur + ' ' + result.request.responseText, status: result.status  };}
+    else {
+      throw { message: error.message , status: 500 };
+    }
+    /*
     const result = error.response;
     console.log(result);
  
     const texteErreur = result.statusText;
     throw { message: texteErreur, status: result.status };
-
+*/
 
   }
 

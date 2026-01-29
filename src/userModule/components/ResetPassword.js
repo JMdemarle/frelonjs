@@ -32,9 +32,8 @@ import { Button, Container, ButtonGroup, Dropdown } from "react-bootstrap";
 import { login, retrieveApiculteurTotal, postPasswordReset } from '../services/authentification';
 
 import { useDispatch, useSelector } from 'react-redux'
-import { userStore } from '../../store/userslice'
-import { typfecondationStore } from '../../store/typfecondationslice'
-import { setAffReine, setAffLogin, setAffResetPassword } from '../../store/displayslice'
+
+import { setAffResetPassword } from '../../store/displayslice'
 
 //import { setToken } from '../services/token';
 //import { setLangue, getLangue } from '../../rucherModule/services/getLangue';

@@ -8,12 +8,9 @@ import Paper from '@mui/material/Paper';
 
 
 import { useDispatch, useSelector } from 'react-redux'
-import { typfecondationStore } from '../../store/typfecondationslice'
 import MenuBar from '../../components/MenuBar'
 import { grey, amber, green } from '@mui/material/colors';
-import { reineStore, reineRevoke, lesFillesMStore, lesFillesPStore } from '../../store/reineslice'
-import { treeStore, treeRevoke } from '../../store/treeslice'
-import { setTitreBar, setAffReine, setAffGenealogie, setAffFilles } from '../../store/displayslice'
+
 import NewPassword from '../components/NewPassword';
 
 

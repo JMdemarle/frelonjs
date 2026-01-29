@@ -23,9 +23,7 @@ import ListDerniersRelevesParPiege from '../components/ListDerniersRelevesParPie
 
 
 
-import { cPickersStore } from '../../store/cPickersslice'
 //import { userStore} from '../../store/userslice'
-import { lesColoniesDeApiStore, lesColoniesDelegationStore, lesRuchersTravailStore } from '../../store/ruchersslice'
 //import { } from '../../store/displayRucherslice'
 import { setTitreBar, setAffLogin } from '../../store/displayslice'
 //import { setAffModColonie, setAffCreeColonie, setAffModRucher, setAffCreeRucher } from '../../store/displayRucherslice';

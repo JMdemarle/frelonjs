@@ -38,8 +38,6 @@ import { modifyPiege, createPiege, getListPiegesDePiegeur } from '../services/ac
 
 
 import { useDispatch, useSelector } from 'react-redux'
-import { reineStore } from '../../store/reineslice'
-import { treeStore } from '../../store/treeslice'
 
 //import { setToken } from '../services/token';
 //import { setLangue, getLangue } from '../../rucherModule/services/getLangue';
@@ -54,9 +52,6 @@ import CustomButton from '../../components/CustomButton';
 
 import SaisiePositionGPS from '../../components/SaisiePositionGPS.js';
 
-
-import { setAffModRecolte, setAffCreeRecolte, listColoniesdeApi } from '../../store/displayRucherslice';
-import { laRecolteStore, laDerniereRecolteStore, laRecolteRevoke, lesRecoltesStore } from '../../store/ruchersslice'
 
 import { Construction } from '@mui/icons-material';
 

@@ -15,8 +15,6 @@ import { login, retrievePiegeurTotal } from '../services/authentification';
 
 import { useDispatch, useSelector } from 'react-redux'
 import { userStore } from '../../store/userslice'
-import { typfecondationStore } from '../../store/typfecondationslice'
-import { setAffReine } from '../../store/displayslice'
 
 //import { setToken } from '../services/token';
 //import { setLangue, getLangue } from '../../rucherModule/services/getLangue';

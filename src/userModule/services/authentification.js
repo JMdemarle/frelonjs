@@ -6,6 +6,7 @@ import { post, get, put, del } from '../../services/fetch';
 
 export const login = (username, password) => {
   localStorage.setItem('token', null);
+  console.log('login');
 
   return post('/api-token-auth/', {
      username, password });
