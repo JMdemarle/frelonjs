@@ -54,7 +54,7 @@ function PiegesScreen() {
 
   const { titreBar, affGenealogie, affLogin } = useSelector(state => state.display)
 
-  const { affListPieges, affCreePiege, affModPiege, affDelPiege, affListReleves, affModReleve,
+  const { affListPieges, affCreePiege, affModPiege, affDelPiege, affListReleves, affCreeReleve, affModReleve,
     affDelReleve
 
    } = useSelector(state => state.displayFrelon);
@@ -103,6 +103,9 @@ function PiegesScreen() {
             dispatch(userStore(userValues));
             //dispatch(apiProprietaireStore (userValues.id));
           })
+          .catch((err) => {
+            token = null; 
+          });
       }
       else {
         dispatch(setAffLogin(true));
@@ -197,6 +200,7 @@ function PiegesScreen() {
             {affModPiege && <ModPiege />}
             {affDelPiege && <DelPiege />}
             {affListReleves && <ListReleves />}
+            {affCreeReleve && <ModReleve />}
             {affModReleve && <ModReleve />}
             {affDelReleve && <DelReleve />}
 

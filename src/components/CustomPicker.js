@@ -43,35 +43,31 @@ const CustomPicker = (props) => {
 
   return (
     <>
-      <Box>
+      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',  flex: 0 }}>
 
-        <Grid container display="flex" alignItems="center">
+        <Box sx={{ flex: labD  , display: 'flex', pt: 1, pl: 1,  m:1, color: grey[600] }} >
+          {label && <><Typography>{label} </Typography>
+            {required && <Typography color={amber[900]}>&nbsp;*</Typography>}</>}
+        </Box>
+        <Box sx={{ flex: fieldD , display: 'flex', pt: 1, pl: 1, m:1,color: grey[600] }} >
+          <FormControl variant="standard" fullWidth sx={{ m: 0, minWidth: 40, bgcolor: 'white' }} size="small" margin="dense">
 
-          <Grid size={labD} sx={{ pt: 1, pl: 1, color: grey[600] }} display="flex">
-            {label && <><Typography>{label} </Typography>
-              {required && <Typography color={amber[900]}>&nbsp;*</Typography>}</>}
-          </Grid>
-          <Grid size={fieldD}>
+            <Select
+              name={name}
+              value={selectedValue}
+              onChange={(itemvalue) => handleChange(itemvalue)}
+            >
 
-            <FormControl variant="standard" fullWidth sx={{ m: 0, minWidth: 40, bgcolor: 'white' }} size="small" margin="dense">
+              {liste.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option[NomListObjet]}
+                </MenuItem>))
+              }
+            </Select>
+          </FormControl>
+        </Box>
+        {fieldError && <p style={styles.errorText}>{fieldError}</p>}
 
-              <Select
-                name={name}
-                value={selectedValue}
-                onChange={(itemvalue) => handleChange(itemvalue)}
-              >
-
-                {liste.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option[NomListObjet]}
-                  </MenuItem>))
-                }
-              </Select>
-            </FormControl>
-          </Grid>
-          {fieldError && <p style={styles.errorText}>{fieldError}</p>}
-
-        </Grid>
       </Box>
     </>
   )

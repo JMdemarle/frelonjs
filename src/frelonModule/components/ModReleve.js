@@ -61,13 +61,17 @@ import { Construction } from '@mui/icons-material';
 //import { headerStyles } from '../../components/Styles';
 import { prepDate, dispDate } from '../../services/prepDate';
 import dayjs from 'dayjs';
-import { modifyPiege, createPiege, getListPiegesDePiegeur, updateReleve, getRelevesduPiege } from '../services/accesFrelon';
+import {
+  modifyPiege, createPiege, getListPiegesDePiegeur, updateReleve, getRelevesduPiege,
+  createReleve
+} from '../services/accesFrelon';
 
-import { setAffModReleve, setAffListReleves } from '../../store/frelondisplayslice';
+import { setAffModReleve, setAffCreeReleve, setAffListReleves } from '../../store/frelondisplayslice';
 import {
   lePiegeStore, lePiegeRevoke, lesPiegesDePiegeurStore, lesPiegesRevoke, lesRelevesDuPiegeStore
 
 } from '../../store/frelonslice';
+
 
 //import i18n from '../../rucherModule/services/i18n';
 //import {setIdApplication, getIdApplication} from '../../services/splash';
@@ -95,6 +99,9 @@ function ModReleve(props) {
   const piege = useSelector(state => state.frelon).lePiege;
 
   const { lesTypesInsecte, lesTypesAppat } = useSelector(state => state.frelontype);
+  const { affListPieges, affCreePiege, affModPiege, affDelPiege, affListReleves, affCreeReleve, affModReleve,
+    affDelReleve
+  } = useSelector(state => state.displayFrelon);
 
   console.log('mod releve');
   console.log(piege);
@@ -117,42 +124,100 @@ function ModReleve(props) {
     init.piege_nom = piege.nom;
     init.TypePiege = piege.TypePiege;
     init.nomTypePiege = piege.nomTypePiege;
-    init.appat_id = releve.appat;
-    init.detailAppat = releve.detailAppat;
-    init.releve_id = releve.id;
+    if (affModReleve) {
 
-    //init.dateS = prepDate(releve.date);
-    //init.dateS = releve.date;
-    init.dateS = dayjs(releve.date);
+      init.appat_id = releve.appat;
+      init.detailAppat = releve.detailAppat;
+
+      init.releve_id = releve.id;
+
+      //init.dateS = prepDate(releve.date);
+      //init.dateS = releve.date;
+      init.dateS = dayjs(releve.date);
 
 
 
-    let lesCaptures = [];
-    for (const typeInsecte of lesTypesInsecte) {
+      let lesCaptures = [];
+      for (const typeInsecte of lesTypesInsecte) {
 
-      const idTypeInsecte = typeInsecte.id;
-      const locCapture = new Object();
-      const index = releve.comptages.findIndex(comptage => comptage.typeInsecte === idTypeInsecte);
-      locCapture.typeInsecte = typeInsecte.id;
-      locCapture.nom = typeInsecte.nom;
-      if (index > -1) {
-        locCapture.nb = releve.comptages[index].nombre;
-        locCapture.id = releve.comptages[index].id;
+        const idTypeInsecte = typeInsecte.id;
+        const locCapture = new Object();
+        const index = releve.comptages.findIndex(comptage => comptage.typeInsecte === idTypeInsecte);
+        locCapture.typeInsecte = typeInsecte.id;
+        locCapture.nom = typeInsecte.nom;
+        if (index > -1) {
+          locCapture.nb = releve.comptages[index].nombre;
+          locCapture.id = releve.comptages[index].id;
 
+        } else {
+          locCapture.nb = '';
+          locCapture.id = null;
+
+        }
+        lesCaptures.push(locCapture);
+      };
+      init.lesCaptures = lesCaptures;
+    } else {
+      init.dateS = dayjs(new Date());
+      if (piege.dernier_releve) {
+        init.appat_id = piege.dernier_releve.appat_id;
+        init.detailAppat = piege.dernier_releve.appat
       } else {
+        init.appat_id = "";
+        init.detailAppat = "";
+      }
+      let lesCaptures = [];
+      for (const typeInsecte of lesTypesInsecte) {
+        const locCapture = new Object();
+        locCapture.typeInsecte = typeInsecte.id;
+        locCapture.nom = typeInsecte.nom;
         locCapture.nb = '';
         locCapture.id = null;
+        lesCaptures.push(locCapture);
 
       }
-      lesCaptures.push(locCapture);
-    };
-    init.lesCaptures = lesCaptures;
+      init.lesCaptures = lesCaptures;
+    }
+
     console.log(init);
     return init;
   };
 
   const ValidationSchema = yup.object().shape({
+    appat_id: yup.number().test(
+      "appât oblogatoire",
+      "Il faut choisir un appât",
+      function (value) {
+        const { lesCaptures } = this.parent;
 
+        // Vérifie si au moins un nombre est renseigné dans lesCaptures
+        const unNombreRenseigne = Array.isArray(lesCaptures) && lesCaptures.some(
+
+          (n) => n.nb !== null && n.nb !== undefined && n.nb !== ""
+
+        );
+
+        // Si aucun nombre n'est renseigné → OK, libelle facultatif
+        if (!unNombreRenseigne) return true;
+
+        // Sinon libelle obligatoire et > 0
+        return typeof value === "number" && value > 0;
+      }
+    ),
+
+    lesCaptures: yup.array().of(
+      yup.object({
+        nb: yup.string()
+          .test(
+            "is-number",
+            "Veuillez saisir un nombre entier ≥ 0",
+            (value) => {
+              if (value === undefined || value === "") return true;
+              return /^[0-9]+$/.test(value); // entier ≥ 0
+            }
+          )
+      })
+    ),
 
   });
 
@@ -170,30 +235,49 @@ function ModReleve(props) {
     const tempComptages = [];
     for (const capture of data.lesCaptures) {
       if (capture.nb) {
-      const comptage = new Object();
-      comptage.typeInsecte = capture.typeInsecte;
-      comptage.nombre = capture.nb;
-      if (capture.id) {
-      comptage.id = capture.id;};
-      tempComptages.push(comptage);
+        const comptage = new Object();
+        comptage.typeInsecte = capture.typeInsecte;
+        comptage.nombre = capture.nb;
+        if (capture.id) {
+          comptage.id = capture.id;
+        };
+        tempComptages.push(comptage);
       }
     };
     payload.comptages = tempComptages;
-    updateReleve(id, payload)
-      .then(() => {
-       getRelevesduPiege(piege.id)
-         .then(async (releves) => {
-           console.log(releves);
-           dispatch(lesRelevesDuPiegeStore(releves));
-           dispatch(setAffModReleve(false));
-           dispatch(setAffListReleves(true));
-         })     
-      })
-      .catch((error) => {
-        setErrorMessage(error.message);
-        console.log(error);
-      })
-      ;
+    if (affModReleve) {
+      updateReleve(id, payload)
+        .then(() => {
+          getRelevesduPiege(piege.id)
+            .then(async (releves) => {
+              console.log(releves);
+              dispatch(lesRelevesDuPiegeStore(releves));
+              dispatch(setAffModReleve(false));
+              dispatch(setAffListReleves(true));
+            })
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+          console.log(error);
+        })
+        ;
+    } else {
+      createReleve(payload)
+        .then(() => {
+          getRelevesduPiege(piege.id)
+            .then(async (releves) => {
+              console.log(releves);
+              dispatch(lesRelevesDuPiegeStore(releves));
+              dispatch(setAffCreeReleve(false));
+              dispatch(setAffListReleves(true));
+            })
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+          console.log(error);
+        })
+        ;
+    }
 
     // navigation.replace('Colonie', {idColonie: colonie.id, contenuPickers: contenuPickers, nomRucher : nomRucher, idRucher: idRucher})});
   };
@@ -207,9 +291,13 @@ function ModReleve(props) {
         open={visible}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}      >
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        PaperProps={{
+          sx: { width: '1000px', maxWidth: '80%' } // custom width
+        }}
+      >
         <Box sx={{
-          width: 500, bgcolor: amber[100],
+          width: 1200, bgcolor: amber[100],
           border: '2px solid #000', boxShadow: 24, p: 2,
         }} >
           <Formik
@@ -229,47 +317,59 @@ function ModReleve(props) {
                 <Divider />
                 <p></p>
                 <Box sx={{ flex: 1 }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'fr'}>
-                    <DatePicker
-                      label=""
-                      value={values.dateS}
-                      format="DD/MM/YYYY"
-                      onChange={(newValue) => { setFieldValue("dateS", newValue || values.dateS); }}
-                      sx={{
-                        backgroundColor: 'white', borderColor: 'blue',
-                        borderWidth: 1,
-                        borderRadius: 5,
-                      }}
+                  <Box style={{ flexDirection: 'row', display: 'flex', alignContent: 'flex-end'}} >
+                    <Box sx={{ flex: 1 }}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'fr'}>
+                        <DatePicker
+                          label=""
+                          value={values.dateS}
+                          format="DD/MM/YYYY"
+                          onChange={(newValue) => { setFieldValue("dateS", newValue || values.dateS); }}
+                          sx={{
+                            backgroundColor: 'white', borderColor: 'blue',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                          }}
 
-                      slotProps={{
-                        textField: {
-                          size: 'small',    // réduit la hauteur
-                          InputProps: {
-                            sx: { typography: "h7", },
-                          },
-                        },
-                      }}
+                          slotProps={{
+                            textField: {
+                              size: 'small',    // réduit la hauteur
+                              InputProps: {
+                                sx: { typography: "h7", },
+                              },
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </Box>
+                    <Box sx={{ flex: 2 }}>
+
+                      <Field component={CustomPicker}
+                        label={'Type Appat'}
+                        liste={lesTypesAppat} itemKey='id' itemLabel='nom' NomListObjet="nom"
+                        modeModif={true}
+                        selectedValue={values.appat_id}
+                        handleChange={(itemIndex) => handleChange('appat_id')(itemIndex)}
+                        name={'appat_id'}
+                        required={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 2 }}>
+
+                    <Field
+                      component={CustomInput}
+                      name={`detailAppat`}
+                      placeholder={'Détail de l\'appat'}
+                      label={null}
+                      labD={0}
+                      fieldD={12}
                     />
-                  </LocalizationProvider>
-                  <Field component={CustomPicker}
-                    label={'Type Appat'}
-                    liste={lesTypesAppat} itemKey='id' itemLabel='nom' NomListObjet="nom"
-                    modeModif={true}
-                    selectedValue={values.appat_id}
-                    handleChange={(itemIndex) => handleChange('appat_id')(itemIndex)}
-                    name={'appat_id'}
-                    required={true}
-                  />
-                  <Field
-                    component={CustomInput}
-                    name={`detailAppat`}
-                    placeholder={'Détail de l\'appat'}
-                    label={null}
-                    labD={0}
-                    fieldD={12}
-                  />
-                  <Box style={{ flexDirection: 'row', flex: 1, display: 'flex', alignItems: 'left' }}>
-                    {values.lesCaptures.map((comptage, indexCapture) => (
+                  </Box>
+
+                </Box>
+                <Box style={{ flexDirection: 'row', flex: 1, display: 'flex', alignItems: 'left' }}>
+                  {values.lesCaptures.sort((a, b) => a.typeInsecte - b.typeInsecte)
+                    .map((comptage, indexCapture) => (
                       <Box style={{ flex: 1 }} key={indexCapture}>
                         <Field
                           component={CustomInput}
@@ -280,33 +380,33 @@ function ModReleve(props) {
                         />
                       </Box>
                     ))}
-                  </Box>
-                  {errorMessage &&
-                    <Typography variant="body2" color="error" align="center">
-                      {errorMessage}
-                    </Typography>}
-                  <Grid container display="flex" justifyContent="flex-end">
-                    <Tooltip title={<Typography fontSize={20}>Annuler</Typography>} placement="top" sx={{ fontSize: 200 }}>
-                      <IconButton onClick={() => { dispatch(setAffModReleve(false)) }} >
-                        <RestoreIcon sx={{ fontSize: 40, }} />
-                      </IconButton>
-                    </Tooltip>
-                    <IconButton onClick={() => { console.log('submit'); handleSubmit() }} sx={{ color: green[700] }} >
-                      <CheckCircleOutlineIcon sx={{ fontSize: 40 }} />
-                    </IconButton>
-                  </Grid>
-
                 </Box>
+                {errorMessage &&
+                  <Typography variant="body2" color="error" align="center">
+                    {errorMessage}
+                  </Typography>}
+                <Grid container display="flex" justifyContent="flex-end">
+                  <Tooltip title={<Typography fontSize={20}>Annuler</Typography>} placement="top" sx={{ fontSize: 200 }}>
+                    <IconButton onClick={() => { dispatch(setAffModReleve(false)) }} >
+                      <RestoreIcon sx={{ fontSize: 40, }} />
+                    </IconButton>
+                  </Tooltip>
+                  <IconButton onClick={() => { console.log('submit'); handleSubmit() }} sx={{ color: green[700] }} >
+                    <CheckCircleOutlineIcon sx={{ fontSize: 40 }} />
+                  </IconButton>
+                </Grid>
 
-              </>
+              </Box>
+
+          </>
 
 
             )}
 
-          </Formik>
+        </Formik>
 
-        </Box>
-      </Modal>
+      </Box>
+    </Modal >
     </>);
 }
 

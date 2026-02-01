@@ -89,6 +89,10 @@ export const creeReleves = async (lesReleves) => {
   return post('/CreeReleves', { lesReleves });
 };
 
+export const createReleve = (payload) => {
+  return post('/releves/', payload);
+};
+
 export const updateReleve = (id, payload) => {
   return put('/releves/' + id + '/', payload);
 };

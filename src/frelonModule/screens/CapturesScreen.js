@@ -109,6 +109,9 @@ function CapturesScreen() {
             dispatch(userStore(userValues));
             //dispatch(apiProprietaireStore (userValues.id));
           })
+          .catch((err) => {
+            token = null;
+          });
       }
       else {
         dispatch(setAffLogin(true));

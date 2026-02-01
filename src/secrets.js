@@ -3,14 +3,11 @@
 
 //export const API_URL = "http://MacBook-Air-de-Jean.local:8000/api/v1"
 //export const API_URL = "http://macbook-air-de-jean.local:8000/api/v1"
-export const API_URL = "http://localhost:8000/api/v1"
+
+// au 29/01/2026: est fonctionne
+//export const API_URL = "http://localhost:8000/api/v1"
+
+
 //export const API_URL = "http://192.168.1.148:8000/api/v1"
 
-//export const API_URL = "https://captures.zaplefrelon.fr/api/v1"
-
-
-//export const API_URL = "https://recetteruchers.uneruchedanslejardin.fr/api/v1"
-
-export const GRATUIT = false;
-export const NBCOLMAXFREE = 30000;
-export const version = 35;
+export const API_URL = "https://captures.zaplefrelon.fr/api/v1"

@@ -1,5 +1,7 @@
 import React from 'react'
 import { Container, Row, Col, Button, ButtonGroup, Dropdown } from "react-bootstrap";
+import { getIn } from "formik";
+
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -15,7 +17,21 @@ import { grey, amber, red } from '@mui/material/colors';
       ...inputProps
     } = props
 
-    const hasError = errors[name] && touched[name]
+    //const hasError = errors[name] && touched[name]
+    const error = getIn(errors, name);
+    const isTouched = getIn(touched, name);
+    const hasError = Boolean(error && isTouched);
+    console.log('custom input');
+    console.log(props);
+    console.log('name');
+    console.log(name);
+    console.log('value');
+    console.log(errors);
+    console.log(touched);
+    console.log('--------');
+    console.log(error);
+    console.log(isTouched);
+    console.log(hasError);
     //console.log(props);
     return (
       <>
@@ -41,7 +57,7 @@ import { grey, amber, red } from '@mui/material/colors';
           {...inputProps}
         />
         </Grid>
-        {hasError && <p style={styles.errorText}>{errors[name]}</p>}
+        {hasError && <p style={styles.errorText}>{error}</p>}
         </Grid>
       </>
     )

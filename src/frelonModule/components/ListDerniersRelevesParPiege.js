@@ -70,7 +70,7 @@ import {
 } from '../../store/frelonslice';
 
 import {
-  setAffCreePiege, setAffModPiege, setAffDelPiege, setAffListDernierReleveParPiege
+  setAffCreePiege, setAffModPiege, setAffDelPiege, setAffListDernierReleveParPiege,
 
 } from '../../store/frelondisplayslice';
 
@@ -81,6 +81,8 @@ function ListDerniersRelevesParPiege() {
 
   const { lesDerniersRelevesParPiege } = useSelector(state => state.frelon);
   const { lesTypesInsecte, lesTypesAppat } = useSelector(state => state.frelontype);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [hoveredId, setHoveredId] = useState(null);
   const [openId, setOpenId] = useState(null);
   const handleOpen = (id) => {
@@ -196,9 +198,16 @@ function ListDerniersRelevesParPiege() {
 
         lesCaptures: yup.array().of(
           yup.object({
-            nb: yup.number()
-              .integer("Entier requis")
-              .min(0, "≥ 0 requis")
+          nb: yup.string()
+            .test(
+              "is-number",
+              "Veuillez saisir un nombre entier ≥ 0",
+              (value) => {
+                if (value === undefined || value === "") return true;
+                return /^[0-9]+$/.test(value); // entier ≥ 0
+              }
+            )
+
           })
         ),
       })
@@ -244,22 +253,21 @@ function ListDerniersRelevesParPiege() {
     console.log('lesReleves____');
     console.log(lesReleves);
 
-    creeReleves(lesReleves);
-    /*
-    date = models.DateField()
-    piege = models.ForeignKey(PiegeUtilise, on_delete=models.CASCADE)
-    appat = models.ForeignKey(TypeAppat, on_delete=models.CASCADE)
-    detailAppat = models.CharField(max_length=40, null=True, blank=True)
+    creeReleves(lesReleves)
+      .then(() => {
+        dispatch(setAffListDernierReleveParPiege(false));
+        navigate('/') 
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+      });
 
-    releve = models.ForeignKey(Releve, on_delete=models.CASCADE)
-    typeInsecte = models.ForeignKey(TypeInsecte, on_delete=models.CASCADE)
-    nombre = models.IntegerField()
-    */
+
   };
 
-
-  const handleAffichePiege = (piege) => {
+    const handleAffichePiege = (piege) => {
   };
+
 
   return (
 
@@ -411,7 +419,7 @@ function ListDerniersRelevesParPiege() {
                                                     .map((comptage, indexCapture) => (
                                       <Box key={indexCapture} >
 
-                                        <Box style={{ flex: 1 }} >
+                                        <Box sx={{ flex: 1, alignItems: 'center' }} >
                                           <CustomTextStd2
                                             style={{ flex: 1 }} label={comptage.nom} contenu={comptage.nbPrec}
                                             labD={9} fieldD={3} />
@@ -426,11 +434,14 @@ function ListDerniersRelevesParPiege() {
                             </DialogActions>
                           </Dialog>
 
+                          {errorMessage &&
+                            <Typography variant="body2" color="error" align="center">
+                              {errorMessage}
+                            </Typography>}
 
-
-                          <Box style={{ flexDirection: 'row', flex: 1, display: 'flex', alignItems: 'left' }}>
+                          <Box sx={{ flexDirection: 'row', flex: 1, display: 'flex', alignItems: 'center' }}>
                             {piege.lesCaptures.map((comptage, indexCapture) => (
-                              <Box style={{ flex: 1 }} key={indexCapture}>
+                              <Box sx={{ flex: 1 }} key={indexCapture}>
                                 <Field
                                   component={CustomInput}
                                   name={`lesPieges.${rowIndex}.lesCaptures.${indexCapture}.nb`}
@@ -451,6 +462,7 @@ function ListDerniersRelevesParPiege() {
                   </Box>
                 ))}
             </Box>
+
             <Box display="flex" style={{ backgroundColor: orange[200] }} alignItems="center" justifyContent="center">
               <IconButton onClick={handleSubmit} sx={{ color: green[700] }} >
                 <CheckCircleOutlineIcon sx={{ fontSize: 40 }} />

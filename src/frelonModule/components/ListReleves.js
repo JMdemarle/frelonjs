@@ -42,8 +42,8 @@ import {
 } from '../../store/frelonslice';
 
 import {
-  setAffCreePiege, setAffModReleve, setAffDelPiege, setAffListPieges, setAffListReleves,
-  setAffDelReleve
+  setAffCreePiege, setAffCreeReleve,setAffModReleve, setAffDelPiege, setAffListPieges, setAffListReleves,
+  setAffDelReleve, 
 
 } from '../../store/frelondisplayslice';
 
@@ -86,8 +86,10 @@ function ListReleves() {
   };
 
 
-  const nouveauPiege = () => {
-    dispatch(setAffCreePiege(true));
+  const nouveauReleve = () => {
+        //dispatch(leReleveStore(piege));
+
+    dispatch(setAffCreeReleve(true));
   };
 
 
@@ -196,6 +198,12 @@ function ListReleves() {
           ))}
 
         </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <Button variant="text" endIcon={<AddCircleOutlineIcon />} onClick={() => { nouveauReleve(); }}>
+                    Nouveau Releve
+                  </Button>
+        
+                </Box>
       </Paper>
     </>
   )

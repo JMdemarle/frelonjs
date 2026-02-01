@@ -18,21 +18,25 @@ const CustomTextStd2 = (props) => {
 
   {/*    <View style={styles.container}> */ }
   return (
-    <Grid container display="flex" sx={{ p: 0.3 }} alignItems="end" >
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'end', flex: 0, sp: 0.3 }}>
+
       {label.length != 0 &&
-        <Grid size={labD}>
+        <Box sx={{ flex: labD, display: 'flex' }} >
+
           <Typography sx={{ bgcolor: amber[50], color: grey[600] }}>
             {label}
           </Typography>
-        </Grid>}
-      <Grid size={fieldD}>
+        </Box>}
+      <Box sx={{ flex: fieldD, display: 'flex' }} >
+
         <Typography sx={{ bgcolor: amber[50] }}>
           {contenu}
         </Typography>
         {children}
+      </Box>
 
-      </Grid>
-    </Grid>
+
+    </Box>
 
 
 

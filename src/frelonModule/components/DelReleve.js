@@ -94,12 +94,11 @@ function DelReleve(props) {
   const releve = useSelector(state => state.frelon).leReleve;
   const { lePiege } = useSelector(state => state.frelon);
   
-  console.log('mod releve');
+  console.log('del releve');
   console.log(releve);
   const { lesTypesPiees } = useSelector(state => state.frelontype);
   const { lesCampagnes } = useSelector(state => state.frelon);
-  var modeModif = false;
-  modeModif = useSelector(state => state.displayFrelon).affModReleve;
+ 
   var affDelReleve = useSelector(state => state.displayFrelon).affDelReleve;
 
   const handleCloseIgnore = () => {
@@ -158,7 +157,9 @@ function DelReleve(props) {
               <Box style={{ flexDirection: 'column', flex: 1, display: 'flex', alignItems: 'left' }}>
                 <Box style={{ flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'left' }}>
                   <Box style={{ flex: 1 }} >
-                    <CustomTextStd2 label='' contenu={releve.date} />
+                    {(releve.date) ?
+                    <CustomTextStd2 label='' contenu={releve.date} /> :
+                    <CustomTextStd2 label='' contenu='' />}
                   </Box>
                   <Box style={{ flex: 2 }} >
                     <CustomTextStd2 label='' contenu={releve.nomAppat} />

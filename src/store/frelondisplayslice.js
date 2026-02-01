@@ -13,9 +13,10 @@ const displayFrelonSlice = createSlice({
     affDelPiege: false,
     affListReleves: false,
     affListDernierReleveParPiege: false,
-    affModReleve: false ,
+    affCreeReleve: false,
+    affModReleve: false,
     affDelReleve: false
- 
+
   },
   reducers: {
     setAffListPieges: (state, action) => {
@@ -60,6 +61,13 @@ const displayFrelonSlice = createSlice({
         default: { state.affListReleves = false; break; }
       }
     },
+    setAffCreeReleve: (state, action) => {
+      switch (action.payload) {
+        case false: { state.affCreeReleve = action.payload; break; }
+        case true: { state.affCreeReleve = action.payload; break; }
+        default: { state.affCreeReleve = false; break; }
+      }
+    },
     setAffModReleve: (state, action) => {
       switch (action.payload) {
         case false: { state.affModReleve = action.payload; break; }
@@ -79,7 +87,7 @@ const displayFrelonSlice = createSlice({
 export default displayFrelonSlice.reducer;
 export const
   { setAffListPieges, setAffCreePiege, setAffModPiege, setAffDelPiege, setAffListDernierReleveParPiege, setAffListReleves,
-    setAffModReleve, setAffDelReleve
+    setAffCreeReleve,setAffModReleve, setAffDelReleve
   } = displayFrelonSlice.actions;
 // Actions
 //  const { loginSuccess, logoutSuccess } = slice.actions
