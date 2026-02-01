@@ -286,17 +286,17 @@ function ListDerniersRelevesParPiege() {
         }) => (
           <>
 
-            <Box style={{
+            <Box sx={{
               flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'center',
               justifyContent: 'space-evenly', backgroundColor: orange[200],
             }}>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{ flex: 3 }}>
 
                 <Typography variant="h5" >
                   Les captures du
                 </Typography>
               </Box>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{ flex: 3 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
 
                   <DatePicker
@@ -323,7 +323,8 @@ function ListDerniersRelevesParPiege() {
                   />
                 </LocalizationProvider>
               </Box>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{ flex: 5 }}></Box>
+              <Box sx={{ flex: 1, justifySelf: 'flex-end' }}>
                 <IconButton onClick={() => { dispatch(setAffListDernierReleveParPiege(false)); navigate('/') }} >
                   <CancelPresentationIcon sx={{ fontSize: 30, color: grey[900] }} />
                 </IconButton>
@@ -341,7 +342,7 @@ function ListDerniersRelevesParPiege() {
               {
                 values.lesPieges.map((piege, rowIndex) => (
                   <Box sx={{ m: 0 }} key={rowIndex}>
-                    <Box style={{ flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ flexDirection: 'row', flex: 0, display: 'flex', alignItems: 'center' }}>
 
                       <Card variant="outlined" sx={{ m: 0, backgroundColor: amber[50], borderColor: amber[800], border: 1, borderRadius: '10px', }}
                         onClick={() => { handleAffichePiege(piege) }}

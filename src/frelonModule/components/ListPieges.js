@@ -165,7 +165,7 @@ function ListPieges() {
                     </CardActionArea>
                   </Card>
                 </Box>
-                <Box style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                <Box sx={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly' }}>
                   <>
                     <Tooltip title={<Typography fontSize={20}>Modifier</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
                       <IconButton onClick={() => { handleEditClick(piege) }} sx={{ color: green[700] }} >
@@ -180,7 +180,7 @@ function ListPieges() {
                       </IconButton>
                       </span>
                     </Tooltip>
-                    <Tooltip title={<Typography fontSize={20}>Supprimer</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
+                    <Tooltip title={<Typography fontSize={20}>Lister</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
                       <span>
                       <IconButton onClick={() => { handleListClick(piege) }} sx={{ color: BluetoothAudio[700] }} 
                         disabled={piege.nbReleves == 0} >
