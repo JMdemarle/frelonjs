@@ -105,6 +105,8 @@ function PiegesScreen() {
           })
           .catch((err) => {
             token = null; 
+            dispatch(setAffLogin(true));
+
           });
       }
       else {

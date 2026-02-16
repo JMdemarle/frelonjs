@@ -21,28 +21,17 @@ import { grey, amber, red } from '@mui/material/colors';
     const error = getIn(errors, name);
     const isTouched = getIn(touched, name);
     const hasError = Boolean(error && isTouched);
-    console.log('custom input');
-    console.log(props);
-    console.log('name');
-    console.log(name);
-    console.log('value');
-    console.log(errors);
-    console.log(touched);
-    console.log('--------');
-    console.log(error);
-    console.log(isTouched);
-    console.log(hasError);
-    //console.log(props);
+
     return (
       <>
   {/*    <View style={styles.container}> */}
-      <Grid container display="flex"     alignItems="center">
+      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',  flex: 0 }}>
 
-        <Grid size={labD} sx={{pt:1, pl:1, color:grey[600]}}  display="flex">
+        <Box sx={{ flex: labD  , display: 'flex', pt: 1, pl: 0,  m:0, color: grey[600] }} >
           {label && <><Typography>{label} </Typography>
           { required && <Typography color={amber[900]}>&nbsp;*</Typography>} </>}
-        </Grid>
-        <Grid size={fieldD}>
+        </Box>
+        <Box sx={{ flex: fieldD , display: 'flex', pt: 1, pl: 0, m:0,color: grey[600] }} >
         <input
           style={          styles.textInput } 
           value={value}
@@ -56,9 +45,9 @@ import { grey, amber, red } from '@mui/material/colors';
 
           {...inputProps}
         />
-        </Grid>
+        </Box>
         {hasError && <p style={styles.errorText}>{error}</p>}
-        </Grid>
+        </Box>
       </>
     )
   }

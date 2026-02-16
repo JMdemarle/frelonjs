@@ -28,6 +28,7 @@ export const deletePiege = async (id) => {
 export const createPiege = async (Piege) => {
 
   let TypePiege = Piege.TypePiege;
+  let detail_piege = Piege.detail_piege;
   let campagne = Piege.campagne;
   let piegeur = Piege.piegeur;
   let actif = Piege.actif;
@@ -35,7 +36,7 @@ export const createPiege = async (Piege) => {
   Piege.nom == "" ? nom = null: nom = Piege.nom;
   let latitude = Piege.latitude;
   let longitude = Piege.longitude;
-  return post ('/NewPiegeUtilise' , {nom, TypePiege, campagne, piegeur, actif, latitude, longitude});
+  return post ('/NewPiegeUtilise' , {nom, TypePiege, campagne, piegeur, actif, latitude, longitude, detail_piege});
 
 
   /*
@@ -55,6 +56,7 @@ export const modifyPiege = async (Piege) => {
 
   let id = Piege.id;
   let TypePiege = Piege.TypePiege;
+  let detail_piege = Piege.detail_piege;
   let campagne = Piege.campagne;
   let piegeur = Piege.piegeur;
   let actif = Piege.actif;
@@ -62,7 +64,7 @@ export const modifyPiege = async (Piege) => {
   Piege.nom == "" ? nom = null: nom = Piege.nom;
   let latitude = Piege.latitude;
   let longitude = Piege.longitude;
-  return put('/DetPiegeUtilise/' + Piege.id , {nom, TypePiege, campagne, piegeur, actif, latitude, longitude});
+  return put('/DetPiegeUtilise/' + Piege.id , {nom, TypePiege, campagne, piegeur, actif, latitude, longitude, detail_piege});
   /*
   console.log(Entree);
   let DateEntree = Entree.DateEntree;

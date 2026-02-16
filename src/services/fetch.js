@@ -21,7 +21,8 @@ const getHeaders = async () => {
   };
 
   var token = '';
-
+  console.log('getheaders');  
+  console.log(localStorage.getItem('token'));
   if (localStorage.getItem('token')) {
     try {
       token = JSON.parse(localStorage.getItem('token'))

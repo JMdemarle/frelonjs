@@ -64,25 +64,36 @@ const CreateAccount = ({ toggleAff, affiche, ...props }) => {
     createAccount(data.nom, data.zzz, data.password1, data.password2)
       .then(async (res) => {
         setErrorMessage('');
+        console.log(res);
         localStorage.setItem('token', JSON.stringify({ token: res.key }));
+        //localStorage.setItem('token', JSON.stringify(res));
         //login(data.nom, data.password1)
-      })
-      .then(async () => {
-        retrievePiegeurTotal()
-          .then(async (res3) => {
-            dispatch(userStore(res3));
 
-            modPiegeur(res3.id, data.nom, 'fr')
+        Promise.all([retrievePiegeurTotal(),])
+
+          .then(async (res3) => {
+            console.log('res3');
+            console.log(res3);
+            dispatch(userStore(res3));
+            const idPiegeur = res3[0].id;
+            console.log('idPiegeur');
+            console.log(idPiegeur); 
+
+            modPiegeur(idPiegeur, data.nom, 'fr')
               .then(() => {
+                console.log('piegeur modifié');
                 toggleAff();
-                navigate('/reine');
+                navigate('/');
               })
           })
       })
+
       .catch((res) => {
         console.log('erreur');
-
+        console.log(res);
+        console.log(res.message);
         setErrorMessage(res.message);
+        //setErrorMessage(res.message);
       });
   };
 

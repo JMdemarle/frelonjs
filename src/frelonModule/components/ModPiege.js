@@ -104,6 +104,7 @@ function ModPiege(props) {
     if (modeModif) {
       init.nom = piege.nom;
       init.TypePiege = piege.TypePiege;
+      init.detail_piege ? init.detail_piege = piege.detail_piege : init.detail_piege = "" ;
       init.campagne = piege.campagne;
       init.id = piege.id;
       init.piegeur = piege.piegeur;
@@ -116,6 +117,7 @@ function ModPiege(props) {
     else {
       init.nom = "";
       init.TypePiege = "";
+      init.detail_piege = "";
       init.campagne = "";
       init.id = 0;
       init.piegeur = user.id;
@@ -140,6 +142,9 @@ function ModPiege(props) {
     TypePiege: yup
       .string()
       .required('Obligatoire'),
+    detail_piege: yup
+      .string()
+      .max(50, 'trop long'),
     
   });
 
@@ -158,6 +163,7 @@ function ModPiege(props) {
       */
     var Piege = new Object();
     Piege.TypePiege = data.TypePiege;
+    Piege.detail_piege = data.detail_piege;
     Piege.campagne = data.campagne;
     Piege.piegeur = user.id;
     Piege.actif = data.actif;
@@ -251,7 +257,11 @@ function ModPiege(props) {
                   name="TypePiege"
                   handleChange={(itemIndex) => handleChange('TypePiege')(itemIndex)}
                   required={true}
+                  labD={4} fieldD={8} 
                 />
+
+                <Field component={CustomInput} name="detail_piege" label='Detail  '
+                  placeholder='Detail' required={false} labD={4} fieldD={8} />
 
 
                 <Field component={CustomPicker}
@@ -263,6 +273,7 @@ function ModPiege(props) {
                   name="campagne"
                   handleChange={(itemIndex) => handleChange('campagne')(itemIndex)}
                   required={true}
+                  labD={4} fieldD={8} 
                 />
                 <>
                   <Field component={CustomSwitchHoriz} label='Actif'

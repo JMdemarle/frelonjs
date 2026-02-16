@@ -99,45 +99,48 @@ function HomeScreen() {
 
   return (
     <>
-        <Box
-      display="flex"
-      flexDirection="column"
-      height="100%" // prend toute la hauteur disponible de son parent
-    >
-      <MenuBar />
-      <Grid2 container>
+      <Box
+        display="flex"
+        flexDirection="column"
+        height="100%" // prend toute la hauteur disponible de son parent
+      >
+        <MenuBar />
+        <Grid2 container>
 
-        <Grid2 xs={4} >
-          <Paper elevation={10} sx={{ m: 1, bgcolor: amber[100] }} >
-            <div style={{ height: 400, width: '100%' }}>
-              <Typography variant="h4" align="center">
-                Piégeage Frelon à Pattes Jaunes
-              </Typography>
+          <Grid2 xs={4} >
+            <Paper elevation={10} sx={{ m: 1, bgcolor: amber[100] }} >
+              <div style={{ height: 400, width: '100%' }}>
+                <Typography variant="h4" align="center">
+                  Piégeage Frelon à Pattes Jaunes
+                </Typography>
 
-              <Grid2 container alignItems="stretch" sx={{ m: 1 }}>
-                <CustomCard label='Pièges' destination='/pieges' largeur={4} variant='h5' />
-                <CustomCard label='Relevés' destination='/captures' largeur={4} variant='h5' />
-              </Grid2>
+                <Grid2 container alignItems="stretch" sx={{ m: 1 }}>
+                  <CustomCard label='Pièges' destination='/pieges' largeur={4} variant='h5' />
+                  <CustomCard label='Relevés' destination='/captures' largeur={4} variant='h5' />
+                </Grid2>
+                <Typography variant="body2" color="text.secondary" align="left">
+                  V1.1
+                </Typography>
+              </div>
+            </Paper>
+          </Grid2>
 
-            </div>
-          </Paper>
+
+          {ErrorMessage ? (
+            <>
+              <Divider variant="middle" />
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={{ xs: 1, sm: 2, md: 4 }}
+              >
+                <ReportProblemIcon sx={{ fontsize: 20, color: red[700] }} />
+                <Typography fontSize={20} sx={{ color: red[700] }}>{ErrorMessage}</Typography>
+              </Stack>
+            </>
+          ) : null}
         </Grid2>
 
-
-        {ErrorMessage ? (
-          <>
-            <Divider variant="middle" />
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={{ xs: 1, sm: 2, md: 4 }}
-            >
-              <ReportProblemIcon sx={{ fontsize: 20, color: red[700] }} />
-              <Typography fontSize={20} sx={{ color: red[700] }}>{ErrorMessage}</Typography>
-            </Stack>
-          </>
-        ) : null}
-      </Grid2>
-</Box>
+      </Box>
     </>
   );
 }

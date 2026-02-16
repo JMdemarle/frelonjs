@@ -139,7 +139,7 @@ function ListDerniersRelevesParPiege() {
         } else {
           locCapture.nb = '';
         }
-        locCapture.nbPrec = piege?.dernier_releve?.comptages[index].nombre;
+        locCapture.nbPrec = piege?.dernier_releve?.comptages[index]?.nombre;
         lesCaptures.push(locCapture);
       };
       locPiege.lesCaptures = lesCaptures;
@@ -423,7 +423,7 @@ function ListDerniersRelevesParPiege() {
                                         <Box sx={{ flex: 1, alignItems: 'center' }} >
                                           <CustomTextStd2
                                             style={{ flex: 1 }} label={comptage.nom} contenu={comptage.nbPrec}
-                                            labD={9} fieldD={3} />
+                                            labD={5} fieldD={1} />
                                         </Box>
                                       </Box>
                                     ))}

@@ -45,11 +45,11 @@ const CustomPicker = (props) => {
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',  flex: 0 }}>
 
-        <Box sx={{ flex: labD  , display: 'flex', pt: 1, pl: 1,  m:1, color: grey[600] }} >
+        <Box sx={{ flex: labD  , display: 'flex', pt: 1, pl: 0,  m:0, color: grey[600] }} >
           {label && <><Typography>{label} </Typography>
             {required && <Typography color={amber[900]}>&nbsp;*</Typography>}</>}
         </Box>
-        <Box sx={{ flex: fieldD , display: 'flex', pt: 1, pl: 1, m:1,color: grey[600] }} >
+        <Box sx={{ flex: fieldD , display: 'flex', pt: 1, pl: 0, m:0,color: grey[600] }} >
           <FormControl variant="standard" fullWidth sx={{ m: 0, minWidth: 40, bgcolor: 'white' }} size="small" margin="dense">
 
             <Select

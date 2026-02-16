@@ -173,7 +173,7 @@ function ListReleves() {
                     </CardActionArea>
                   </Card>
                 </Box>
-                <Box style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly' }}>
                   <>
                     <Tooltip title={<Typography fontSize={20}>Modifier</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
                       <IconButton onClick={() => { handleEditClick(releve) }} sx={{ color: green[700] }} >

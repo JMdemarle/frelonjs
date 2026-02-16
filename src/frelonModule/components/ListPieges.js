@@ -74,7 +74,6 @@ function ListPieges() {
   if (user) {
     const langue = user.langage;
   }
-  let itemApi = user.id;
 
 
   const dispatch = useDispatch()
@@ -165,7 +164,7 @@ function ListPieges() {
                     </CardActionArea>
                   </Card>
                 </Box>
-                <Box sx={{ flex: 1, flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly' }}>
                   <>
                     <Tooltip title={<Typography fontSize={20}>Modifier</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
                       <IconButton onClick={() => { handleEditClick(piege) }} sx={{ color: green[700] }} >
@@ -174,18 +173,18 @@ function ListPieges() {
                     </Tooltip>
                     <Tooltip title={<Typography fontSize={20}>Supprimer</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
                       <span>
-                      <IconButton onClick={() => { handleDelClick(piege) }} sx={{ color: red[700] }} 
-                        disabled={piege.nbReleves > 0} >
-                        <DeleteIcon sx={{ fontSize: 30 }} />
-                      </IconButton>
+                        <IconButton onClick={() => { handleDelClick(piege) }} sx={{ color: red[700] }}
+                          disabled={piege.nbReleves > 0} >
+                          <DeleteIcon sx={{ fontSize: 30 }} />
+                        </IconButton>
                       </span>
                     </Tooltip>
                     <Tooltip title={<Typography fontSize={20}>Lister</Typography>} placement="right-start" sx={{ fontSize: 200 }}>
                       <span>
-                      <IconButton onClick={() => { handleListClick(piege) }} sx={{ color: BluetoothAudio[700] }} 
-                        disabled={piege.nbReleves == 0} >
-                        <ListAltIcon sx={{ fontSize: 30 }} />
-                      </IconButton>
+                        <IconButton onClick={() => { handleListClick(piege) }} sx={{ color: BluetoothAudio[700] }}
+                          disabled={piege.nbReleves == 0} >
+                          <ListAltIcon sx={{ fontSize: 30 }} />
+                        </IconButton>
                       </span>
                     </Tooltip>
 
@@ -193,7 +192,10 @@ function ListPieges() {
                 </Box>
 
               </Box>
+              <Divider />
+
             </Box>
+
           ))}
 
         </Box>
